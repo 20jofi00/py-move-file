@@ -19,7 +19,14 @@ def move_file(command: str) -> None:
 
     directory = os.path.dirname(final_destination)
     if directory:
-        os.makedirs(directory, exist_ok=True)
+        normalized_directory = os.path.normpath(directory)
+        segments = normalized_directory.split(os.sep)
+        current_directory = ""
+
+        for segment in segments:
+            current_directory = os.path.join(current_directory, segment)
+            if not os.path.exists(current_directory):
+                os.mkdir(current_directory)
 
     with open(source_path, "r") as file, open(final_destination, "w") as data:
         content = file.read()
